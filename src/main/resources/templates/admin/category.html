@@ -11,18 +11,47 @@
 			<div class="row">
 				<div class="col-md-4">
 					<div class="card card-sh">
-						<div class="card-header text-center fs-4 fw-bold">Add
-							Category</div>
+						<div class="card-header text-center">
+							<p class="fs-4 fw-bold">Add Category</p>
+							<div th:if="${SuccMsg}"
+								class="alert alert-success py-1 px-2 mb-0"
+								style="font-size: 14px;">
+								<span th:text="${SuccMsg}"></span>
+							</div>
+
+							<div th:if="${errorMsg}"
+								class="alert alert-danger py-1 px-2 mb-0"
+								style="font-size: 14px;">
+								<span th:text="${errorMsg}"></span>
+							</div>
+						</div>
 						<div class="card-body">
-							<form>
+							<form action="/admin/saveCategory" method="post"
+								enctype="multipart/form-data">
 								<div class="md-3">
-									<label>Enter Category</label> <input type="text"
-										name="category" class="form-control">
+									<label>Enter Category</label> <input type="text" name="name"
+										class="form-control" required>
 								</div>
 
 								<div class="md-3">
-									<label>Upload Image</label> <input type="file"
-										name="uploadimage" class="form-control">
+									<label>Status</label>
+									<div class="form-check">
+										<input class="form-check-input" type="radio" value="true"
+											name="isActive" id="radioDefault1" checked > <label
+											class="form-check-label" for="radioDefault1"> Active
+										</label>
+									</div>
+									<div class="form-check">
+										<input class="form-check-input" type="radio" value="false"
+											name="isActive" id="radioDefault2"> <label
+											class="form-check-label" for="radioDefault2">
+											Inactive </label>
+									</div>
+								</div>
+
+								<div class="md-3">
+									<label>Upload Image</label> <input type="file" name="file"
+										class="form-control" required>
 								</div>
 								<button class="btn btn-primary col-md-12 mt-3">Add</button>
 							</form>
