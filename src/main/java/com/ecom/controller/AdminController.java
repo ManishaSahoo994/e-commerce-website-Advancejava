@@ -7,12 +7,15 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import org.hibernate.grammars.hql.HqlParser.IsEmptyPredicateContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,7 +45,8 @@ public class AdminController {
 	}
 	
 	@GetMapping("/category")
-	public String category() {
+	public String category(Model m) {
+		m.addAttribute("categorys", categoryService.getAllCategory());
 		return "admin/category";
 	}
 	
@@ -78,5 +82,55 @@ public class AdminController {
 		}
        return "redirect:/admin/category";
 	}
-	
+	@GetMapping("/deleteCategory/{id}")
+	public String deleteCategory(@PathVariable int id, RedirectAttributes redirectAttributes) {
+	    Boolean deleteCategory = categoryService.deleteCategory(id);
+	    if (deleteCategory) {
+	        redirectAttributes.addFlashAttribute("SuccMsg", "Category deleted successfully");
+	    } else {
+	        redirectAttributes.addFlashAttribute("errorMsg", "Something went wrong on the server");
+	    }
+	    return "redirect:/admin/category";
+	}
+
+	@GetMapping("/edit_category/{id}")
+	public String editCategory(@PathVariable int id, Model m) {
+		m.addAttribute("category", categoryService.getCategoryById(id));
+		return "admin/edit_category";
+	}
+	@PostMapping("/updateCategory")
+	public String updateCategory(@ModelAttribute Category category,@RequestParam("file") MultipartFile file, RedirectAttributes redirectAttributes) throws IOException {
+		
+		Category Oldcategory = categoryService.getCategoryById(category.getId());
+		
+		String imageName = file.isEmpty() ?Oldcategory.getImageName():file.getOriginalFilename();
+		
+		if(!ObjectUtils.isEmpty(Oldcategory)) {
+			Oldcategory.setName(category.getName());
+			Oldcategory.setIsActive(category.getIsActive());
+			Oldcategory.setImageName(imageName);
+			
+			}
+		Category updateCategory=categoryService.saveCategory(Oldcategory);
+		
+		if(!ObjectUtils.isEmpty(updateCategory)) {
+			
+			if(!file.isEmpty())
+			{
+				File saveFile = new ClassPathResource("static/img").getFile();
+	        	Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "category_img" + File.separator + file.getOriginalFilename());
+	        	
+	        	System.out.println(path);
+	        	Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+	        		
+			}
+			
+			 redirectAttributes.addFlashAttribute("SuccMsg", "Category updated successfully");
+	    } else {
+	        redirectAttributes.addFlashAttribute("errorMsg", "Something went wrong on the server");
+	   
+		}
+		
+		return "redirect:/admin/edit_category/" + category.getId();
+	}
 }
