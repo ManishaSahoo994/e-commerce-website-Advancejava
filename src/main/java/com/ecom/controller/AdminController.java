@@ -185,5 +185,23 @@ public class AdminController {
 		return "redirect:/admin/products";
 	}
 	
+    @GetMapping("/editProduct/{id}")
+    public String editProduct(@PathVariable int id,Model m) {
+	m.addAttribute("product", productService.getProductById(id));
+	m.addAttribute("categories", categoryService.getAllCategory());
+	return "admin/edit_product";
+}
 	
+    @PostMapping("/updateProduct")
+    public String updateProduct(@ModelAttribute Product product,@RequestParam("file") MultipartFile image,RedirectAttributes redirectAttributes,
+    		Model m) {
+    	Product updateProduct = productService.updateProduct(product, image);
+    	if(!ObjectUtils.isEmpty(updateProduct)) {
+    		redirectAttributes.addFlashAttribute("SuccMsg", "Product updated successfully");
+	    } else {
+	        redirectAttributes.addFlashAttribute("errorMsg", "Something went wrong on the server");
+	    }
+	
+    	return "redirect:/admin/editProduct/"+product.getId();
+    }
 }
