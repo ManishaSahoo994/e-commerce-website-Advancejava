@@ -165,4 +165,25 @@ public class AdminController {
 		return "redirect:/admin/addproduct";
 		
 	}
+	@GetMapping("/products")
+	public String products(Model m) {
+		m.addAttribute("products", productService.getAllProduct());
+		return "admin/products";
+	}
+	
+	@GetMapping("/deleteProduct/{id}")
+	public String deleteProduct(@PathVariable int id, RedirectAttributes redirectAttributes) {
+		Boolean deleteProduct = productService.deleteProduct(id);
+		
+		if(deleteProduct) {
+			 redirectAttributes.addFlashAttribute("SuccMsg", "Category deleted successfully");
+	    } else {
+	        redirectAttributes.addFlashAttribute("errorMsg", "Something went wrong on the server");
+	    }
+			
+		
+		return "redirect:/admin/products";
+	}
+	
+	
 }
