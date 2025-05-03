@@ -35,5 +35,9 @@ public class Product {
 	private int Stock;
 	
 	private String image; 
+	
+	private int discount;
+	
+	private Double discountPrice;
 
 }
