@@ -17,4 +17,8 @@ public interface ProductService {
 	public Product getProductById(Integer id);
 	
 	public Product updateProduct(Product product, MultipartFile file);
+	
+	public List<Product> getAllActiveProduct();
+	
+	
 }

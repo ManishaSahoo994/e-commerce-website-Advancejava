@@ -24,18 +24,16 @@
 		<div class="container-fluid mt-1">
 			<div class="row">
 				<div class="col-md-2 p-0">
-				<div class="card shadow-sm p-0 mb-5 bg-body-tertiary rounded">
-				<div class="card-body">
-					<div class="list-group">
-						<a href="#" class="list-group-item list-group-item-action active"
-							aria-current="true"> Categories </a> <a href="#"
-							class="list-group-item list-group-item-action">Electronics</a> <a
-							href="#" class="list-group-item list-group-item-action">Mobile
-							Phone</a> <a href="#" class="list-group-item list-group-item-action">Clothes</a>
-						<a class="list-group-item list-group-item-action disabled"
-							aria-disabled="true">Beauty</a>
-					</div>
-					</div>
+					<div class="card shadow-sm p-0 mb-5 bg-body-tertiary rounded">
+						<div class="card-body">
+							<div class="list-group">
+								<a href="#"
+									class="list-group-item list-group-item-action active"
+									aria-current="true"> Categories </a> <a href="#"
+									th:each="c:${categories}"
+									class="list-group-item list-group-item-action">[[${c.name}]]</a>
+							</div>
+						</div>
 					</div>
 				</div>
 				<div class="col-md-10">
@@ -43,15 +41,18 @@
 						<div class="card-body">
 							<p class="fs-3 text-center">Products</p>
 							<div class="row">
-								<div class="col-md-3">
+								<div class="col-md-3" th:each="p:${products}">
 									<div class="card">
 										<div class="card-body text-center">
-											<img src="/img/product_img/laptop.jpg" width="100%"
+											<img th:src="@{'/img/product_img/'+${p.image}}" width="100%"
 												height="150px">
-											<p class="fs-5 text-center">Laptop</p>
+											<p class="fs-5 text-center">[[${p.title}]]</p>
 											<div class="row text-center">
-												<p class="fs-5 text-center fw-bold">
-													&#8377; 500 <span class="fs-6 text-success">20% off</span>
+												<p class="fs-6 text-center fw-bold ">
+													<span>&#8377;[[${p.discountPrice}]]</span><br> <span
+														class="text-decoration-line-through text-secondary">&#8377;
+														[[${p.price}]]</span> <span class="fs-6 text-success">[[${p.discount}]]%
+														off</span>
 												</p>
 												<a href="/view" class="btn btn-primary col-md-6 offset-md-3">View
 													Details</a>
@@ -59,59 +60,6 @@
 										</div>
 									</div>
 								</div>
-
-
-								<!-- TODO: remove after backend implement -->
-
-								<div class="col-md-3">
-									<div class="card">
-										<div class="card-body text-center">
-											<img src="/img/product_img/laptop.jpg" width="100%"
-												height="150px">
-											<p class="fs-5 text-center">Laptop</p>
-											<div class="row text-center">
-												<p class="fs-5 text-center fw-bold">
-													&#8377; 500 <span class="fs-6 text-success">20% off</span>
-												</p>
-												<a class="btn btn-primary col-md-6 offset-md-3">View
-													Details</a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-3">
-									<div class="card">
-										<div class="card-body text-center">
-											<img src="/img/product_img/laptop.jpg" width="100%"
-												height="150px">
-											<p class="fs-5 text-center">Laptop</p>
-											<div class="row text-center">
-												<p class="fs-5 text-center fw-bold">
-													&#8377; 500 <span class="fs-6 text-success">20% off</span>
-												</p>
-												<a class="btn btn-primary col-md-6 offset-md-3">View
-													Details</a>
-											</div>
-										</div>
-									</div>
-								</div>
-								<div class="col-md-3">
-									<div class="card">
-										<div class="card-body text-center">
-											<img src="/img/product_img/laptop.jpg" width="100%"
-												height="150px">
-											<p class="fs-5 text-center">Laptop</p>
-											<div class="row text-center">
-												<p class="fs-5 text-center fw-bold">
-													&#8377; 500 <span class="fs-6 text-success">20% off</span>
-												</p>
-												<a class="btn btn-primary col-md-6 offset-md-3">View
-													Details</a>
-											</div>
-										</div>
-									</div>
-								</div>
-
 								<!--end   -->
 							</div>
 						</div>
