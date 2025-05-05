@@ -14,68 +14,79 @@
 				</div>
 				<div class="col-md-6 p-1">
 					<div class="card shadow p-3 mb-5 bg-body-tertiary rounded">
-						<div class="card-header">
+						<div class="card-header text-center">
 							<p class="fs-4 text-center">
 								<b>REGISTER</b>
 							</p>
+							<div th:if="${SuccMsg}"
+								class="alert alert-success py-1 px-2 mb-0"
+								style="font-size: 14px;">
+								<span th:text="${SuccMsg}"></span>
+							</div>
+
+							<div th:if="${errorMsg}"
+								class="alert alert-danger py-1 px-2 mb-0"
+								style="font-size: 14px;">
+								<span th:text="${errorMsg}"></span>
+							</div>
 						</div>
 						<div class="card-body">
-							<form>
+							<form action="/saveUser" method="Post" enctype="multipart/form-data">
 							<div class="row">
 								<div class="col">
 									<label class="form-label">Full Name</label> <input
-										class="form-control" name="name" type="text">
+										class="form-control" name="name" type="text" required>
 								</div>
 
 								<div class="col">
 									<label class="form-label">Mobile Number</label> <input
-										class="form-control" name="mobileNumber" type="number">
+										class="form-control" name="mobileNumber" type="number" required>
 								</div>
 								</div>
 								
 								<div class="mb-3">
 									<label class="form-label">Email</label> <input
-										class="form-control" name="email" type="email">
+										class="form-control" name="email" type="email" required>
 								</div>
 							<div class="row">
 								<div class="col">
 									<label class="form-label">Address</label> <input
-										class="form-control" name="address" type="text">
+										class="form-control" name="address" type="text" required>
 								</div>
 
 								<div class="col">
 									<label class="form-label">City</label> <input
-										class="form-control" name="city" type="text">
+										class="form-control" name="city" type="text" required>
 								</div>
 								</div>
 								
 								<div class="row">
 								<div class="col">
 									<label class="form-label">State</label> <input
-										class="form-control" name="state" type="text">
+										class="form-control" name="state" type="text" required>
 								</div>
 
 								<div class="col">
 									<label class="form-label">Pincode</label> <input
-										class="form-control" name="pincode" type="number">
+										class="form-control" name="pincode" type="number" required>
 								</div>
 								</div>
 								
 								<div class="row">
 								<div class="col">
 									<label class="form-label">Password</label> <input
-										class="form-control" name="password" type="password">
+										class="form-control" name="password" type="password" required>
 								</div>
 
 								<div class="col">
 									<label class="form-label">Confirm Password</label> <input
-										class="form-control" name="cpassword" type="password">
+										class="form-control" name="cpassword" type="password" required>
 								</div>
 								</div>
 								
 								<div class="mb-3">
 									<label class="form-label">Profile Image</label> <input
-										class="form-control" name="profile_image" type="file">
+										class="form-control" name="profile_image" type="file" required>
 								</div>
 								<button type="submit"
 									class="btn bg-primary text-white col-md-12">Register</button>
