@@ -45,7 +45,7 @@ public class HomeController {
 		return "index";
 	}
 	
-	@GetMapping("/login")
+	@GetMapping("/signin")
 	public String login() {
 		return "login";
 	}
@@ -84,7 +84,7 @@ public class HomeController {
 				File saveFile = new ClassPathResource("static/img").getFile();
 	        	Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "profile_img" + File.separator + file.getOriginalFilename());
 	        	
-	        	System.out.println(path);
+	        	//System.out.println(path);
 	        	Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 			}
 	        	redirectAttributes.addFlashAttribute("SuccMsg", "Register Successfully");
