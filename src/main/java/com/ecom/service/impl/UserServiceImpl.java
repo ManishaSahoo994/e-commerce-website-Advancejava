@@ -24,6 +24,12 @@ public class UserServiceImpl implements UserService{
 		UserDtls saveUser = userRepo.save(user);
 		return saveUser;
 	}
+
+	@Override
+	public UserDtls getUserByEmail(String email) {
+		
+		return userRepo.findByEmail(email);
+	}
 	
 
 }
