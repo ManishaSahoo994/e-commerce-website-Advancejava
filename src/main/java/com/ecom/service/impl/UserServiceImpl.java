@@ -1,5 +1,8 @@
 package com.ecom.service.impl;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public UserDtls saveUser(UserDtls user) {
 		user.setRole("ROLE_USER");
+		user.setIsEnable(true);
 		String encodePasswordString = passwordEncoder.encode(user.getPassword());
 		user.setPassword(encodePasswordString);
 		UserDtls saveUser = userRepo.save(user);
@@ -29,6 +33,25 @@ public class UserServiceImpl implements UserService{
 	public UserDtls getUserByEmail(String email) {
 		
 		return userRepo.findByEmail(email);
+	}
+
+	@Override
+	public List<UserDtls> getUsers(String role) {
+		return userRepo.findByRole(role);
+	}
+
+	@Override
+	public Boolean updateUserAccountStatus(Integer id, Boolean status) {
+		Optional<UserDtls> findByuser = userRepo.findById(id);
+		
+		if(findByuser.isPresent())
+		{
+			UserDtls userDtls = findByuser.get();
+			userDtls.setIsEnable(status);
+			userRepo.save(userDtls);
+			return true;
+		}
+		return false;
 	}
 	
 

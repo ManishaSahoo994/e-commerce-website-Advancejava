@@ -230,4 +230,23 @@ public class AdminController {
 	
     	return "redirect:/admin/editProduct/"+product.getId();
     }
+    @GetMapping("/users")
+    public String getAllUsers(Model m) {
+     List<UserDtls> users = userService.getUsers("ROLE_USER");
+     m.addAttribute("users", users);
+    	return "/admin/users";
+    }
+    @GetMapping("/updateSts")
+    public String updateUserAccountStatus(@RequestParam Boolean status,@RequestParam Integer id, RedirectAttributes redirectAttributes)
+    {
+    	Boolean f = userService.updateUserAccountStatus(id, status);
+    	if(f)
+    	{
+    		redirectAttributes.addFlashAttribute("SuccMsg", "Product updated successfully");
+	    } else {
+	        redirectAttributes.addFlashAttribute("errorMsg", "Something went wrong on the server");
+	    }
+            	
+    	return "redirect:/admin/users";
+    }
 }
