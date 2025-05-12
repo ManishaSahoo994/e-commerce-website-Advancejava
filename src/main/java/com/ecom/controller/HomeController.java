@@ -8,10 +8,13 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
+
 import com.ecom.model.Category;
 import com.ecom.model.Product;
 import com.ecom.model.UserDtls;
 
+import org.apache.naming.factory.SendMailFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Controller;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -28,6 +32,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ecom.service.CategoryService;
 import com.ecom.service.ProductService;
 import com.ecom.service.UserService;
+import com.ecom.util.CommonUtil;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class HomeController {
@@ -113,6 +120,38 @@ public class HomeController {
 	@GetMapping("/forgot_password")
 	public String showForgotPassword() {
 		return "forgot_password.html";
+	}
+	
+	@PostMapping ("/forgot_password")
+	public String processForgotPassword(@RequestParam String email, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+		
+		UserDtls userByEmail = userService.getUserByEmail(email);
+		if(ObjectUtils.isEmpty(userByEmail))
+		{
+			redirectAttributes.addFlashAttribute("errorMsg", "invalid email");
+		}else {
+			
+			String resetToken = UUID.randomUUID().toString();
+			userService.updateUserResetToken(email,resetToken);
+			
+			//generate URL : http://localhost:8080/reset_password?token=ryfyhiolsfhjkhkljlhhjgdfsdghfjhkljl
+			
+			String url = CommonUtil.generateUrl(request)+"/reset_password?token="+resetToken;
+			
+			Boolean sendMail = CommonUtil.sendMail();
+			
+			if(sendMail)
+			{
+				redirectAttributes.addFlashAttribute("SuccMsg", "Please check your email...Password reset link sent.");
+			}else {
+				redirectAttributes.addFlashAttribute("errorMsg", "Something wrong on server! Email can not sent.");
+			}
+			}
+		return "redirect:/forgot_password";
+	}
+	@GetMapping("/reset_password")
+	public String showResetPassword() {
+		return "reset_password.html";
 	}
 	
 }

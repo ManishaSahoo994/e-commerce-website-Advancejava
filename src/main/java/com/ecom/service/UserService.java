@@ -24,4 +24,6 @@ public interface UserService {
 	
 	public void resetAttempt(int userId);
 
+	public void updateUserResetToken(String email, String resetToken);
+
 }
