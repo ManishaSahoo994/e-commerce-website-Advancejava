@@ -2,6 +2,7 @@ package com.ecom.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,6 +35,7 @@ import com.ecom.service.ProductService;
 import com.ecom.service.UserService;
 import com.ecom.util.CommonUtil;
 
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
@@ -47,6 +49,9 @@ public class HomeController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 	
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model m)
@@ -123,9 +128,10 @@ public class HomeController {
 	}
 	
 	@PostMapping ("/forgot_password")
-	public String processForgotPassword(@RequestParam String email, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+	public String processForgotPassword(@RequestParam String email, RedirectAttributes redirectAttributes, HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
 		
 		UserDtls userByEmail = userService.getUserByEmail(email);
+		
 		if(ObjectUtils.isEmpty(userByEmail))
 		{
 			redirectAttributes.addFlashAttribute("errorMsg", "invalid email");
@@ -136,9 +142,10 @@ public class HomeController {
 			
 			//generate URL : http://localhost:8080/reset_password?token=ryfyhiolsfhjkhkljlhhjgdfsdghfjhkljl
 			
-			String url = CommonUtil.generateUrl(request)+"/reset_password?token="+resetToken;
+			String url = commonUtil.generateUrl(request)+"/reset_password?token="+resetToken;
+
 			
-			Boolean sendMail = CommonUtil.sendMail();
+			Boolean sendMail = commonUtil.sendMail(url, email);
 			
 			if(sendMail)
 			{
