@@ -109,9 +109,20 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public void updateUserResetToken(String email, String resetToken) {
 		UserDtls findByEmail = userRepo.findByEmail(email);
-		findByEmail.setReset_token(resetToken);
+		findByEmail.setResetToken(resetToken);
 		userRepo.save(findByEmail);
 		
+	}
+
+	@Override
+	public UserDtls getUserByToken(String token) {
+		return userRepo.findByResetToken(token);
+		
+	}
+
+	@Override
+	public UserDtls updateUser(UserDtls user) {
+		return userRepo.save(user);
 	}
 	
 
