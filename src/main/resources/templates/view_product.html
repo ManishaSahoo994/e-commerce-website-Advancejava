@@ -12,6 +12,15 @@
 			<div class="col-md-12 p-5">
 				<p class="fs-3 text-center mt-1">Product Details</p>
 				<div class="row">
+					<div th:if="${SuccMsg}" class="alert alert-success py-1 px-2 mb-0 text-center"
+						style="font-size: 14px;">
+						<span th:text="${SuccMsg}"></span>
+					</div>
+
+					<div th:if="${errorMsg}" class="alert alert-danger py-1 px-2 mb-0 text-center"
+						style="font-size: 14px;">
+						<span th:text="${errorMsg}"></span>
+					</div>
 					<div class="col-md-6 text-end">
 						<img src="/img/product_img/laptop.jpg" width="330px"
 							height="400px">
@@ -22,20 +31,22 @@
 							<span class="fw-bold">Description</span><br>[[${product.description}]]
 						</p>
 						<p>
-							<span class="fw-bold">Product Details:</span><br>Status: 
+							<span class="fw-bold">Product Details:</span><br>Status:
 							<th:block th:if="${product.stock>0}">
-							<span
-								class="badge bg-success">Available</span> 
+								<span class="badge bg-success">Available</span>
 							</th:block>
-							
+
 							<th:block th:unless="${product.stock>0}">
-							<span
-								class="badge bg-warning">Out Of Stock</span> 
+								<span class="badge bg-warning">Out Of Stock</span>
 							</th:block>
-							<br>Category:[[${product.category}]]<br>
-							Policy: 7 Days Replacement & Return<br>
-							<br> <span class="fw-bold fs-5">Price:&nbsp; &nbsp; &nbsp; &nbsp;<i class="fas fa-rupee-sign"></i>.[[${product.discountPrice}]]</span>
-							<span class="fs-6 text-decoration-line-through text-secondary fw-bold">[[${product.price}]]</span> <span class="fs-6 text-success fw-bold">[[${product.discount}]]% off </span><br>
+							<br>Category:[[${product.category}]]<br> Policy: 7 Days
+							Replacement & Return<br> <br> <span
+								class="fw-bold fs-5">Price:&nbsp; &nbsp; &nbsp; &nbsp;<i
+								class="fas fa-rupee-sign"></i>.[[${product.discountPrice}]]
+							</span> <span
+								class="fs-6 text-decoration-line-through text-secondary fw-bold">[[${product.price}]]</span>
+							<span class="fs-6 text-success fw-bold">[[${product.discount}]]%
+								off </span><br>
 						</p>
 						<div class="row">
 							<div class="col-md-4 text-danger text-center p-2">
@@ -53,11 +64,21 @@
 								<p>Free Delivery</p>
 							</div>
 							<th:block th:if="${product.stock>0}">
-							<a href="login.jsp" class="btn btn-danger col-md-12">Add To Cart</a>
+								<th:block th:if="${user==null}">
+									<a th:href="@{/signin}" class="btn btn-danger col-md-12">Add
+										To Cart</a>
+								</th:block>
+
+								<th:block th:unless="${user==null}">
+									<a
+										th:href="@{'/user/addCart?pid='+${product.id}+'&uid='+${user.id}}"
+										class="btn btn-danger col-md-12">Add To Cart</a>
+								</th:block>
 							</th:block>
-							
+
 							<th:block th:unless="${product.stock>0}">
-							<a href="#" class="btn btn-warning text-white col-md-12">Out Of Stock</a>
+								<a href="#" class="btn btn-warning text-white col-md-12">Out
+									Of Stock</a>
 							</th:block>
 						</div>
 					</div>
