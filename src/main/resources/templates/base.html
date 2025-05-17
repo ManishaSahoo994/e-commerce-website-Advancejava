@@ -48,6 +48,7 @@
 
 				<ul class="navbar-nav ms-auto mb-2 mb-lg-0">
 					<th:block th:if="${user==null}">
+
 						<li class="nav-item"><a class="nav-link active"
 							aria-current="page" href="/signin"><i
 								class="fa-solid fa-right-to-bracket"></i>LOGIN</a></li>
@@ -57,6 +58,9 @@
 							aria-current="page" href="#">ADMIN</a></li>
 					</th:block>
 					<th:block th:if="${user!=null}">
+					<li class="nav-item"><a class="nav-link active"
+							aria-current="page" href="/user/cart"><i
+								class="fa-solid fa-cart-shopping"></i> Cart [ [[${countCart}]] ] </a></li>
 						<li class="nav-item dropdown"><a
 							class="nav-link dropdown-toggle active" href="#" role="button"
 							data-bs-toggle="dropdown" aria-expanded="false"> <i
