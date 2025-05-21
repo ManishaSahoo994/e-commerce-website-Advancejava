@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ecom.model.Cart;
 import com.ecom.model.Category;
 import com.ecom.model.OrderRequest;
+import com.ecom.model.ProductOrder;
 import com.ecom.model.UserDtls;
 import com.ecom.service.CartService;
 import com.ecom.service.CategoryService;
@@ -123,5 +124,13 @@ public class UserController {
 	public String loadSuccess()
 	{
 		return "/user/success";
+	}
+	@GetMapping("/user-orders")
+	public String myOrder(Model m, Principal p)
+	{
+		UserDtls loginUser = getLoggedInUserDetails(p);
+		List<ProductOrder> orders = orderService.getOrderByUser(loginUser.getId());
+		m.addAttribute("orders",orders);
+		return "user/my_orders";
 	}
 }
