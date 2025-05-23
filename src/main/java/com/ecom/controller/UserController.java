@@ -23,6 +23,7 @@ import com.ecom.service.CartService;
 import com.ecom.service.CategoryService;
 import com.ecom.service.OrderService;
 import com.ecom.service.UserService;
+import com.ecom.util.OrderStatus;
 
 @Controller
 @RequestMapping("/user")
@@ -132,5 +133,30 @@ public class UserController {
 		List<ProductOrder> orders = orderService.getOrderByUser(loginUser.getId());
 		m.addAttribute("orders",orders);
 		return "user/my_orders";
+	}
+	@GetMapping("/update-status")
+	public String updateOrderStatus(@RequestParam Integer id,@RequestParam Integer st,RedirectAttributes redirectAttributes)
+	{
+		OrderStatus[] values = OrderStatus.values();
+		String status=null;
+		
+		for(OrderStatus orderSt:values)
+		{
+			if(orderSt.getId().equals(st))
+			{
+				status=orderSt.getName();
+			}
+		}
+		
+		Boolean updateOrderStatus = orderService.updateOrderStatus(id, status);
+		if(updateOrderStatus)
+		{
+			redirectAttributes.addFlashAttribute("SuccMsg", "Status updated Successfully");
+		}else {
+			 redirectAttributes.addFlashAttribute("errorMsg", "Status not updated! Internal server error");
+		}
+		
+		
+		return "redirect:/user/user-orders";
 	}
 }

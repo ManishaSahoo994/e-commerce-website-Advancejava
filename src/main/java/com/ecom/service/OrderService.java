@@ -10,5 +10,7 @@ public interface OrderService {
 	public void saveOrder(Integer userid,OrderRequest orderRequest);
 	
 	public List<ProductOrder> getOrderByUser(Integer userId);
+	
+	public Boolean updateOrderStatus(Integer id,String status);
 
 }

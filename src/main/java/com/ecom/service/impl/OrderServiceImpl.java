@@ -3,6 +3,7 @@ package com.ecom.service.impl;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,19 @@ public class OrderServiceImpl implements OrderService{
 	public List<ProductOrder> getOrderByUser(Integer userId) {
 		List<ProductOrder> orders = orderRepo.findByUserId(userId);
 		return orders;
+	}
+
+	@Override
+	public Boolean updateOrderStatus(Integer id, String status) {
+		Optional<ProductOrder> findById = orderRepo.findById(id);
+		if(findById.isPresent())
+		{
+			ProductOrder productOrder = findById.get();
+			productOrder.setStatus(status);
+			orderRepo.save(productOrder);
+			return true;
+		}
+		return false;
 	}
 
 }

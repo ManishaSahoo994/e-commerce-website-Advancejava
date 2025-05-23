@@ -10,6 +10,17 @@
 		<div class="container mt-5 p-5">
 			<div class="row">
 				<p class="text-center fs-3">My Orders</p>
+				<div th:if="${SuccMsg}"
+					class="alert alert-success py-1 px-2 mb-0 text-center"
+					style="font-size: 14px;">
+					<span th:text="${SuccMsg}"></span>
+				</div>
+
+				<div th:if="${errorMsg}"
+					class="alert alert-danger py-1 px-2 mb-0 text-center"
+					style="font-size: 14px;">
+					<span th:text="${errorMsg}"></span>
+				</div>
 				<div class="col-md-12">
 					<table class="table table-bordered">
 						<thead>
@@ -32,7 +43,16 @@
 									o.price}]]
 								</td>
 								<td>[[${o.status}]]</td>
-								<td><a href="#" class="btn btn-sm btn-danger">Cancel</a></td>
+								<td>
+									<div th:if="${o.status != 'Cancelled'}">
+										<a th:href="@{'/user/update-status?id=' + ${o.id} + '&st=6'}"
+											class="btn btn-sm btn-danger">Cancel</a>
+									</div>
+									<div th:if="${o.status == 'Cancelled'}">
+										<a href="#" class="btn btn-sm btn-danger disabled">Cancel</a>
+									</div>
+								</td>
+
 
 							</tr>
 						</tbody>
