@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<section>
+		<div class="container-fluid mt-5 p-3">
+			<div class="row">
+				<p class="text-center fs-3 mt-2">All Orders</p>
+				<hr>
+				<a href="/admin/" class="text-decoration-none fs-4"><i
+					class="fa-solid fa-circle-left"></i>Back</a>
+				<div th:if="${SuccMsg}"
+					class="alert alert-success py-1 px-2 mb-0 text-center"
+					style="font-size: 14px;">
+					<span th:text="${SuccMsg}"></span>
+				</div>
+
+				<div th:if="${errorMsg}"
+					class="alert alert-danger py-1 px-2 mb-0 text-center"
+					style="font-size: 14px;">
+					<span th:text="${errorMsg}"></span>
+				</div>
+				<div class="col-md-4 p-4">
+
+					<form>
+						<div class="row">
+							<div class="col">
+								<input type="text" class="form-control" name=""
+									placeholder="Enter Order Id">
+							</div>
+							<div class="col">
+								<button class="btn btn-primary col">Search</button>
+							</div>
+						</div>
+					</form>
+
+				</div>
+				<div class="col-md-12 ps-4 pe-4">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th scope="col">Order Id</th>
+								<th scope="col">Deliver Details</th>
+								<th scope="col">Date</th>
+								<th scope="col">Product Details</th>
+								<th scope="col">Price</th>
+								<th scope="col">Status</th>
+								<th scope="col">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="o:${orders}">
+								<th scope="row">[[${o.orderId}]]</th>
+								<td>Name : [[${o.orderAddress.firstName+' ' +
+									o.orderAddress.lastName}]]<br> Email :
+									[[${o.orderAddress.email}]]<br> Mobno :
+									[[${o.orderAddress.phoneNo}]]<br> Address :
+									[[${o.orderAddress.address}]]<br> City :
+									[[${o.orderAddress.city}]]<br> State :
+									[[${o.orderAddress.state}]],[[${o.orderAddress.pincode}]]
+
+								</td>
+								<td>[[${o.orderDate}]]</td>
+								<td>[[${o.product.title}]]</td>
+								<td>Quantity : [[${o.quantity}]] <br>Price :
+									[[${o.price}]] <br>Total Price : [[${o.quantity *
+									o.price}]]
+								</td>
+								<td>[[${o.status}]]</td>
+								<td>
+									<form action="/admin/update-order-status" method="post">
+										<div class="row">
+											<div class="col">
+												<select class="form-control" name="st">
+													<option value="" disabled selected>--Select--</option>
+													<option value="1">In Progress</option>
+													<option value="2">Order Recived</option>
+													<option value="3">Product Packed</option>
+													<option value="4">Out for Delivery</option>
+													<option value="5">Delivered</option>
+													<option value="6">Cancelled</option>
+												</select>
+											</div>
+											<input th:value="${o.id}" name="id" type="hidden">
+											<div class="col">
+												<div
+													th:if="${o.status == 'Cancelled' || o.status=='Delivered'}">
+													<button class="btn btn-primary btn-sm col disabled">Update</button>
+												</div>
+												<div
+													th:unless="${o.status == 'Cancelled' || o.status=='Delivered'}">
+													<button class="btn btn-primary btn-sm col">Update</button>
+												</div>
+											</div>
+										</div>
+									</form>
+								</td>
+
+
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</section>
+
+</body>
+</html>

@@ -26,11 +26,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ecom.model.Category;
 import com.ecom.model.Product;
+import com.ecom.model.ProductOrder;
 import com.ecom.model.UserDtls;
 import com.ecom.service.CartService;
 import com.ecom.service.CategoryService;
+import com.ecom.service.OrderService;
 import com.ecom.service.ProductService;
 import com.ecom.service.UserService;
+import com.ecom.util.OrderStatus;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -49,6 +52,9 @@ public class AdminController {
 	
 	@Autowired
 	private CartService cartService;
+	
+	@Autowired
+	private OrderService orderService;
 	
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model m)
@@ -255,4 +261,35 @@ public class AdminController {
             	
     	return "redirect:/admin/users";
     }
+    @GetMapping("/orders")
+    public String getAllOrders(Model m) {
+    	List<ProductOrder> allOrders = orderService.getAllOrders();
+     m.addAttribute("orders", allOrders);
+    	return "/admin/orders";
+    }
+    @PostMapping("/update-order-status")
+	public String updateOrderStatus(@RequestParam Integer id,@RequestParam Integer st,RedirectAttributes redirectAttributes)
+	{
+		OrderStatus[] values = OrderStatus.values();
+		String status=null;
+		
+		for(OrderStatus orderSt:values)
+		{
+			if(orderSt.getId().equals(st))
+			{
+				status=orderSt.getName();
+			}
+		}
+		
+		Boolean updateOrderStatus = orderService.updateOrderStatus(id, status);
+		if(updateOrderStatus)
+		{
+			redirectAttributes.addFlashAttribute("SuccMsg", "Status updated Successfully");
+		}else {
+			 redirectAttributes.addFlashAttribute("errorMsg", "Status not updated! Internal server error");
+		}
+		
+		
+		return "redirect:/admin/orders";
+	}
 }
