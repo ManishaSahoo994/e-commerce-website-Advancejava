@@ -16,6 +16,7 @@ import com.ecom.model.ProductOrder;
 import com.ecom.repository.CartRepo;
 import com.ecom.repository.ProductOrderRepo;
 import com.ecom.service.OrderService;
+import com.ecom.util.CommonUtil;
 import com.ecom.util.OrderStatus;
 
 @Service
@@ -26,9 +27,12 @@ public class OrderServiceImpl implements OrderService{
 	
 	@Autowired
 	private CartRepo cartRepo;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 
 	@Override
-	public void saveOrder(Integer userid,OrderRequest orderRequest) {
+	public void saveOrder(Integer userid,OrderRequest orderRequest) throws Exception {
 		List<Cart> carts = cartRepo.findByUserId(userid);
 		
 		for(Cart cart:carts)
@@ -60,9 +64,9 @@ public class OrderServiceImpl implements OrderService{
 		
 		order.setOrderAddress(address);
 		
-		orderRepo.save(order);
+		ProductOrder saveOrder = orderRepo.save(order);
 		
-		
+		commonUtil.sendMailForProductOrder(saveOrder, "success");
 		
 		}
 	}
@@ -74,16 +78,16 @@ public class OrderServiceImpl implements OrderService{
 	}
 
 	@Override
-	public Boolean updateOrderStatus(Integer id, String status) {
+	public ProductOrder updateOrderStatus(Integer id, String status) {
 		Optional<ProductOrder> findById = orderRepo.findById(id);
 		if(findById.isPresent())
 		{
 			ProductOrder productOrder = findById.get();
 			productOrder.setStatus(status);
-			orderRepo.save(productOrder);
-			return true;
+			ProductOrder updateOrder = orderRepo.save(productOrder);
+			return updateOrder;
 		}
-		return false;
+		return null;
 	}
 
 	@Override

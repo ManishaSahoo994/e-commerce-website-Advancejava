@@ -23,6 +23,7 @@ import com.ecom.service.CartService;
 import com.ecom.service.CategoryService;
 import com.ecom.service.OrderService;
 import com.ecom.service.UserService;
+import com.ecom.util.CommonUtil;
 import com.ecom.util.OrderStatus;
 
 @Controller
@@ -40,6 +41,9 @@ public class UserController {
 	
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private CommonUtil commonUtil;
 	
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model m)
@@ -114,7 +118,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/save-order")
-	public String saveOrder(@ModelAttribute OrderRequest request,Principal p)
+	public String saveOrder(@ModelAttribute OrderRequest request,Principal p) throws Exception
 	{
 		//System.out.println(request);
 		UserDtls user = getLoggedInUserDetails(p);
@@ -148,8 +152,14 @@ public class UserController {
 			}
 		}
 		
-		Boolean updateOrderStatus = orderService.updateOrderStatus(id, status);
-		if(updateOrderStatus)
+		ProductOrder updateOrder = orderService.updateOrderStatus(id, status);
+		try {
+			commonUtil.sendMailForProductOrder(updateOrder, status);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if(!ObjectUtils.isEmpty(updateOrder))
 		{
 			redirectAttributes.addFlashAttribute("SuccMsg", "Status updated Successfully");
 		}else {
