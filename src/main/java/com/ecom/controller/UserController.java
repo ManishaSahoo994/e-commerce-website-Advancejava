@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ecom.model.Cart;
@@ -172,5 +173,16 @@ public class UserController {
 	@GetMapping("/profile")
 	public String profile() {
 		return "/user/profile";
+	}
+	@PostMapping("/update-profile")
+	public String updateProfile(@ModelAttribute UserDtls user,@RequestParam MultipartFile img,RedirectAttributes redirectAttributes) {
+		UserDtls updateUserProfile = userService.updateUserProfile(user, img);
+		if(ObjectUtils.isEmpty(updateUserProfile))
+		{
+			redirectAttributes.addFlashAttribute("errorMsg", "Profile not updated! Internal server error");
+		}else {
+			redirectAttributes.addFlashAttribute("SuccMsg", "Profile updated successfully!");
+		}
+		return "redirect:/user/profile";
 	}
 }
