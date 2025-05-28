@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -45,6 +46,9 @@ public class UserController {
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	@ModelAttribute
 	public void getUserDetails(Principal p, Model m)
@@ -183,6 +187,31 @@ public class UserController {
 		}else {
 			redirectAttributes.addFlashAttribute("SuccMsg", "Profile updated successfully!");
 		}
+		return "redirect:/user/profile";
+	}
+	@PostMapping("change-password")
+	public String changePassword(@RequestParam String newPassword,@RequestParam String currentPassword,Principal p,RedirectAttributes redirectAttributes)
+	{
+		UserDtls loggedInUserDetails = getLoggedInUserDetails(p);
+		boolean matches = passwordEncoder.matches(currentPassword, loggedInUserDetails.getPassword());
+		
+		if(matches)
+		{
+			String encodePassword = passwordEncoder.encode(newPassword);
+			loggedInUserDetails.setPassword(encodePassword);
+			UserDtls updateUser = userService.updateUser(loggedInUserDetails);
+			
+			if(ObjectUtils.isEmpty(updateUser))
+			{
+				redirectAttributes.addFlashAttribute("errorMsg", "Password not updated!Error in server.");
+			}else {
+				redirectAttributes.addFlashAttribute("SuccMsg", "Password updated successfully!");
+			}
+			
+		}else {
+			redirectAttributes.addFlashAttribute("errorMsg", "Current password incorrect!");
+		}
+		
 		return "redirect:/user/profile";
 	}
 }
