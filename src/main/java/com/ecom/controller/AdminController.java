@@ -202,8 +202,16 @@ public class AdminController {
 		
 	}
 	@GetMapping("/products")
-	public String products(Model m) {
-		m.addAttribute("products", productService.getAllProduct());
+	public String products(Model m,@RequestParam(defaultValue = "") String ch) {
+		List<Product> searchProduct=null;
+		if(ch!=null && ch.length()>0)
+		{
+			 searchProduct = productService.searchProduct(ch);
+		}else {
+			searchProduct=productService.getAllProduct();
+		}
+		
+		m.addAttribute("products", searchProduct);
 		return "admin/products";
 	}
 	
@@ -303,4 +311,5 @@ public class AdminController {
 		
 		return "redirect:/admin/orders";
 	}
+   
 }
