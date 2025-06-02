@@ -95,4 +95,9 @@ public class OrderServiceImpl implements OrderService{
 		return orderRepo.findAll();
 	}
 
+	@Override
+	public ProductOrder getOrdersByOrderId(String orderId) {
+		return orderRepo.findByOrderId(orderId);
+	}
+
 }
